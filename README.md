@@ -1,15 +1,11 @@
-# Passport-mock
-Designed as a drop in replacement for any passport auth strategy for integration tests.
+# Passport-mocked-factories
+Designed as an easy way to create full profile reponses for passport
 
 #### How to use in your code
 
 ```javascript
-var express = require('express');
-var app = express();
-var Strategy;
-
 if (process.env.NODE_ENV == 'test' ) {
-  Strategy = require('passport-mock').Strategy;
+  Strategy = require('passport-mocked').Strategy;
 } else {
   Strategy = require('passport-facebook').Strategy;
 }
@@ -31,28 +27,16 @@ passport.use(new Strategy({
 #### How to use in your test
 
 ```javascript
-// app is loaded and running in the same process
+
+// the node app needs to be loaded and running in the same process as the tests
 // using the testing framework of your choice
 // probably something like selenium, since you'll most likely need a browser
 
+let passportMockedFactories = require('passport-mocked-factories');
 var passport = require('passport');
 
-this.When(^/I log in to facebook as:$/, function (table, next) {
-  passport._strategies.facebook._profile = {
-    displayName: 'Jon Smith',
-    id: 1234,
-    emails: [ { value: 'jon.smith@example.com' } ]
-  };
-  browser.get('/auth/facebook', next);
+this.When(^/I log in to facebook as:$/, function (table) {
+  passport._strategies.facebook._profile = passportMockedFactories.build('Facebook', table.hashes()[0]);
+  return browser.get('/auth/facebook');
 });
-
-this.Then(^/I should see Jon Smith on the page:$/, function (next) {
-  driver.findElement(webdriver.By.css("body")).catch(next).then(function(element){
-    element.getText().catch(next).then(function(text){
-      console.assert(!!~text.indexOf("Jon Smith"), text + ' should have contained "Jon Smith"');
-      next();
-    });
-  });
-});
-
 ```
