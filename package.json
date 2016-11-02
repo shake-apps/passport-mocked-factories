@@ -1,0 +1,19 @@
+{
+  "name": "passport-mocked-factories",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/**/*"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "faker": "^3.1.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.1.2",
+    "moment": "^2.15.2"
+  }
+}
